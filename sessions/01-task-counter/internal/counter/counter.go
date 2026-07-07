@@ -1,9 +1,9 @@
 package counter
 
-func Count(task []string) int {
-	return len(task)
+func Count(tasks []string) int {
+	return len(tasks)
 }
 
-func IsEmpty(task []string) bool{
-	return Count(task) < 1
+func IsEmpty(tasks []string) bool {
+	return len(tasks) == 0
 }

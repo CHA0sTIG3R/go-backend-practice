@@ -15,9 +15,9 @@ func main() {
 
 	emptyTasks := []string{}
 
-	if counter.IsEmpty(tasks){
+	if counter.IsEmpty(tasks) {
 		printer.PrintEmptyTask()
-	} else{
+	} else {
 		printer.PrintTaskInfo(tasks, counter.Count(tasks))
 	}
 
