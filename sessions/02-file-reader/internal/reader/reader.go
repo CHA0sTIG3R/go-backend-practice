@@ -8,7 +8,7 @@ import (
 
 func ReadTasks(filename string) ([]string, error) {
 
-	tasks := []string {}
+	tasks := []string{}
 
 	file, err := os.Open(filename)
 	if err != nil {
@@ -22,12 +22,10 @@ func ReadTasks(filename string) ([]string, error) {
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		if strings.TrimSpace(line) != ""{
+		if strings.TrimSpace(line) != "" {
 			tasks = append(tasks, line)
-		} else {
-			continue
 		}
-		
+
 	}
 
 	if err := scanner.Err(); err != nil {

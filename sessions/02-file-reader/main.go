@@ -15,7 +15,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	
+
 	if counter.IsEmpty(tasks) {
 		printer.PrintEmptyTask()
 	} else {
