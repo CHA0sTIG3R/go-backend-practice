@@ -21,6 +21,6 @@ func PrintTaskInfo(task []task.Task, completed int, pending int, total int) {
 		} else {
 			fmt.Printf("[ ] %s (Priority %d) \n", task.Name, task.Priority)
 		}
-		
+
 	}
 }

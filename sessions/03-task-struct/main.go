@@ -7,53 +7,53 @@ import (
 )
 
 func main() {
-	tasks := []task.Task {
+	tasks := []task.Task{
 		{
-			Name: "Write tests",
+			Name:      "Write tests",
 			Completed: false,
-			Priority: 2,
+			Priority:  2,
 		},
 		{
-			Name: "Review PR",
+			Name:      "Review PR",
 			Completed: true,
-			Priority: 1,
+			Priority:  1,
 		},
 		{
-			Name: "Update documentation",
+			Name:      "Update documentation",
 			Completed: false,
-			Priority: 3,
+			Priority:  3,
 		},
 		{
-			Name: "Deploy to production",
+			Name:      "Deploy to production",
 			Completed: true,
-			Priority: 1,
+			Priority:  1,
 		},
 		{
-			Name: "Refactor code",
+			Name:      "Refactor code",
 			Completed: false,
-			Priority: 2,
+			Priority:  2,
 		},
 		{
-			Name: "Fix bugs",
+			Name:      "Fix bugs",
 			Completed: true,
-			Priority: 1,
+			Priority:  1,
 		},
 		{
-			Name: "Implement new feature",
+			Name:      "Implement new feature",
 			Completed: false,
-			Priority: 3,
+			Priority:  3,
 		},
 		{
-			Name: "Conduct code review",
+			Name:      "Conduct code review",
 			Completed: true,
-			Priority: 2,
+			Priority:  2,
 		},
 	}
 
 	n := len(tasks)
 
 	for i := 0; i < n-1; i++ {
-		for j := 0; j < n-i-1; j++{
+		for j := 0; j < n-i-1; j++ {
 			if tasks[j].Priority > tasks[j+1].Priority {
 				tasks[j], tasks[j+1] = tasks[j+1], tasks[j]
 			}
