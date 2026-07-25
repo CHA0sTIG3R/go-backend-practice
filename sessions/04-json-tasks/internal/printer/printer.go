@@ -3,7 +3,7 @@ package printer
 import (
 	"fmt"
 
-	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/internal/task"
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
 )
 
 func PrintEmptyTask() {

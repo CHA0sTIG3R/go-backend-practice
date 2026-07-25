@@ -1,6 +1,6 @@
 package counter
 
-import "github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/internal/task"
+import "github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
 
 func Count(tasks []task.Task) int {
 	return len(tasks)

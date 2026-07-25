@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/internal/task"
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
 )
 
 func EncodeJson(tasks []task.Task) ([]byte, error) {
