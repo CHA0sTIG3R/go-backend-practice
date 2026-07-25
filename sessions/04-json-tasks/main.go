@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/internal/counter"
-	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/internal/jsonutil"
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/jsonutil"
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/internal/printer"
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
 )
