@@ -1,0 +1,42 @@
+[
+ {
+  "name": "Write tests",
+  "completed": false,
+  "priority": 2
+ },
+ {
+  "name": "Review PR",
+  "completed": true,
+  "priority": 1
+ },
+ {
+  "name": "Update documentation",
+  "completed": false,
+  "priority": 3
+ },
+ {
+  "name": "Deploy to production",
+  "completed": true,
+  "priority": 1
+ },
+ {
+  "name": "Refactor code",
+  "completed": false,
+  "priority": 2
+ },
+ {
+  "name": "Fix bugs",
+  "completed": true,
+  "priority": 1
+ },
+ {
+  "name": "Implement new feature",
+  "completed": false,
+  "priority": 3
+ },
+ {
+  "name": "Conduct code review",
+  "completed": true,
+  "priority": 2
+ }
+]
