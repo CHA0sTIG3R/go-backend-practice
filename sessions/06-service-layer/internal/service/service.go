@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/jsonutil"
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
 )
 
 type TaskService struct {
