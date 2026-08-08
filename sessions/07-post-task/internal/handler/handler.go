@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/jsonutil"
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/internal/service"
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/internal/validation"
@@ -51,6 +52,10 @@ func postTaskHandler(w http.ResponseWriter, r *http.Request, service *service.Ta
 
 	err = service.AddTask(newTask)
 	if err != nil {
+		if _, ok := err.(*jsonutil.DuplicateTaskError); ok {
+			http.Error(w, err.Error(), http.StatusConflict)
+			return
+		}
 		http.Error(w, "Failed to add task", http.StatusInternalServerError)
 		return
 	}

@@ -2,8 +2,9 @@ package service
 
 import (
 	"encoding/json"
+	"log"
 
-	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/jsonutil"
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/jsonutil"
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
 )
 
@@ -32,6 +33,12 @@ func (s *TaskService) AddTask(task task.Task) (error){
 
 	err = jsonutil.SaveTasks(s.filename, jsonTask)
 	if err != nil {
+		// check the error type and raise 409 conflict if it's a duplicate task error
+		if _, ok := err.(*jsonutil.DuplicateTaskError); ok {
+			return &jsonutil.DuplicateTaskError{TaskName: task.Name}
+		}
+
+		log.Println("Error saving tasks:", err)
 		return err
 	}
 
