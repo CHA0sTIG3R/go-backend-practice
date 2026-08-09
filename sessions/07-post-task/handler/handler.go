@@ -6,8 +6,8 @@ import (
 
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/jsonutil"
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
-	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/internal/service"
-	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/internal/validation"
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/service"
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/validation"
 )
 
 func NewTaskHandler(service *service.TaskService) http.HandlerFunc {
@@ -45,8 +45,9 @@ func postTaskHandler(w http.ResponseWriter, r *http.Request, service *service.Ta
 		return
 	}
 
-	err = validation.ValidateTask(w, newTask)
+	err = validation.ValidateTask(newTask)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

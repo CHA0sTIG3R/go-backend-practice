@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/internal/handler"
-	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/internal/service"
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/handler"
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/service"
 )
 
 func main() {
