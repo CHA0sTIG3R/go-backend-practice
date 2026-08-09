@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/jsonutil"
 	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/07-post-task/jsonutil"
 )
 
 type TaskService struct {
@@ -24,7 +24,7 @@ func (s *TaskService) GetTasks() ([]task.Task, error) {
 	return tasks, nil
 }
 
-func (s *TaskService) AddTask(task task.Task) (error){
+func (s *TaskService) AddTask(task task.Task) error {
 
 	jsonTask, err := json.Marshal(task)
 	if err != nil {
