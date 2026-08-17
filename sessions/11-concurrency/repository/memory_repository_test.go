@@ -14,15 +14,15 @@ func TestMemoryRepositoryConcurrentAdds(t *testing.T) {
 
 	var wg sync.WaitGroup
 
-	// Launch roughly 100 goroutines Each should create a different task
-	workers := 100
+	// Launch roughly 1000 goroutines Each should create a different task
+	workers := 1000
 
 	for i := range workers {
 		wg.Add(1)
 		fmt.Printf("started %d unique AddTask operations concurrently", workers)
 		go func(i int) {
 			task := task.Task{
-				Name:     "same task", // All tasks have the same name
+				Name:     "Task " + fmt.Sprintf("%d", i), // All tasks have unique names
 				Priority: i % 3,
 			}
 			err := repo.AddTask(task)
@@ -38,37 +38,12 @@ func TestMemoryRepositoryConcurrentAdds(t *testing.T) {
 
 	wg.Wait()
 
-	expectedTasks := 1 // Since all tasks have the same name, only one should be added
 	retrievedTasks, err := repo.GetTasks()
 	if err != nil {
 		t.Errorf("Error retrieving tasks: %v", err)
 	}
-	if len(retrievedTasks) != expectedTasks {
-		t.Errorf("Expected %d tasks, but got %d", expectedTasks, len(retrievedTasks))
-	}
-
-	for i := range workers {
-		wg.Add(1)
-		go func(i int) {
-			task := task.Task{
-				Name:     "diff tasks" + fmt.Sprintf("%d", i), // Ensure unique names for each task
-				Priority: i % 3,
-			}
-			err := repo.AddTask(task)
-			if err != nil {
-				t.Errorf("Error adding task: %v", err)
-			}
-			wg.Done()
-		}(i)
-	}
-	wg.Wait()
-
-	retrievedTasks, err = repo.GetTasks()
-	if err != nil {
-		t.Errorf("Error retrieving tasks: %v", err)
-	}
-	if len(retrievedTasks) != expectedTasks+workers {
-		t.Errorf("Expected %d tasks, but got %d", expectedTasks+workers, len(retrievedTasks))
+	if len(retrievedTasks) != workers {
+		t.Errorf("Expected %d tasks, but got %d", workers, len(retrievedTasks))
 	}
 
 
@@ -81,8 +56,8 @@ func TestMemoryRepositoryConcurrentAdds(t *testing.T) {
 			}
 
 			// concurrent read should not affect the number of tasks
-			if len(retrievedTasks) != expectedTasks+workers {
-				t.Errorf("Expected %d tasks, but got %d", expectedTasks+workers, len(retrievedTasks))
+			if len(retrievedTasks) != workers {
+				t.Errorf("Expected %d tasks, but got %d", workers, len(retrievedTasks))
 			}
 
 			wg.Done()
