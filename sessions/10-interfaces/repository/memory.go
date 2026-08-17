@@ -1,9 +1,14 @@
 package repository
 
-import "github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
+import (
+	"sync"
+
+	"github.com/CHA0sTIG3R/go-backend-practice/sessions/04-json-tasks/task"
+)
 
 type MemoryTaskRepository struct {
 	tasks []task.Task
+	mu	 sync.Mutex
 }
 
 func NewMemoryTaskRepository() *MemoryTaskRepository {
@@ -13,15 +18,21 @@ func NewMemoryTaskRepository() *MemoryTaskRepository {
 }
 
 func (r *MemoryTaskRepository) GetTasks() ([]task.Task, error) {
-	return r.tasks, nil
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	return append([]task.Task{}, r.tasks...), nil
 }
 
 func (r *MemoryTaskRepository) AddTask(newTask task.Task) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
 	for _, t := range r.tasks {
 		if t.Name == newTask.Name {
 			return &DuplicateTaskError{TaskName: newTask.Name}
 		}
 	}
+	
 	r.tasks = append(r.tasks, newTask)
 	return nil
 }
