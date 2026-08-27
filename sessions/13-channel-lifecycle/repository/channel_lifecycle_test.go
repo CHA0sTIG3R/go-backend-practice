@@ -38,7 +38,6 @@ func TestConcurrentAddsUntilChannelClosed(t *testing.T) {
 
 	i := 1
 	for err := range resultch {
-		err = <-resultch
 		if err != nil {
 			t.Errorf("go routine %d: Errors from chennels: %v \n", i, err)
 		}
