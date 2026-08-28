@@ -38,7 +38,11 @@ go-backend-practice/
     ├── 07-post-task/
     ├── 08-testing/
     ├── 09-handler-tests/
-    └── 10-interfaces/
+    ├── 10-interfaces/
+    ├── 11-concurrency/
+    ├── 12-channels/
+    ├── 13-channel-lifecycle/
+    └── 14-buffered-channels/
 ```
 
 Each session has its own Go module.
@@ -279,6 +283,71 @@ Key concepts:
 * swapping implementations without changing callers
 
 Unlike Java, a Go type does not explicitly declare that it `implements` an interface. A type satisfies an interface automatically when it provides the required method set.
+
+---
+
+### 11 — Concurrency and Shared State
+
+**Focus:** Running repository operations safely from multiple goroutines.
+
+Exercises concurrent reads, writes, and duplicate-task attempts against the in-memory repository.
+
+Key concepts:
+
+* goroutines
+* `sync.WaitGroup`
+* `sync.Mutex`
+* coordinating concurrent test work
+* protecting shared counters
+* validating results after concurrent operations
+
+---
+
+### 12 — Channels and Worker Results
+
+**Focus:** Collecting results from concurrent work with channels.
+
+Uses an error channel to receive the result of each concurrent repository write.
+
+Key concepts:
+
+* unbuffered channels
+* sending values from goroutines
+* receiving a known number of results
+* coordinating producers and a consumer
+
+---
+
+### 13 — Channel Lifecycle
+
+**Focus:** Closing a channel when a group of producers has finished.
+
+Extends the result-channel pattern so the consumer ranges over the channel until all workers complete and the channel is closed.
+
+Key concepts:
+
+* channel ownership
+* closing channels
+* `for range` over a channel
+* waiting for producers before closing
+* avoiding sends on a closed channel
+
+---
+
+### 14 — Buffered Channels and Backpressure
+
+**Focus:** How bounded channel capacity controls the relationship between producers and consumers.
+
+Uses direct channel experiments to show that buffered sends proceed until capacity is reached, values are received in FIFO order, and an additional sender blocks until a receiver creates space.
+
+Key concepts:
+
+* buffered channels
+* `len` and `cap` on channels
+* FIFO channel delivery
+* non-blocking `select` as an observation tool
+* completion signaling with `chan struct{}`
+* backpressure from a bounded buffer
 
 ## Cross-Session Reuse
 
