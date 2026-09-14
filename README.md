@@ -42,7 +42,11 @@ go-backend-practice/
     ├── 11-concurrency/
     ├── 12-channels/
     ├── 13-channel-lifecycle/
-    └── 14-buffered-channels/
+    ├── 14-buffered-channels/
+    ├── 15-select-timeouts/
+    ├── 16-context-cancellation/
+    ├── 17-worker-pool/
+    └── 18-cancellable-worker-pool/
 ```
 
 Each session has its own Go module.
@@ -349,6 +353,88 @@ Key concepts:
 * completion signaling with `chan struct{}`
 * backpressure from a bounded buffer
 
+---
+
+### 15 — Select and Bounded Waiting
+
+**Focus:** Selecting between multiple channel events, including a result and a timeout.
+
+Uses `select` to handle an immediately available result, a timeout when no result arrives, and multiple ready channels without assuming source-code order determines the winner.
+
+Key concepts:
+
+* `select`
+* `time.After`
+* bounded waiting
+* ready-case selection
+* pseudo-random selection among multiple ready cases
+* non-blocking probes with `default`
+
+---
+
+### 16 — Context Cancellation
+
+**Focus:** Cooperatively stopping work when its caller no longer needs the result.
+
+Introduces `context.Context` as a cancellation signal and verifies that a worker observes `ctx.Done()`, exits promptly, and reports `context.Canceled`.
+
+Key concepts:
+
+* `context.Context`
+* `context.WithCancel`
+* `ctx.Done()`
+* `ctx.Err()`
+* cancellation ownership
+* bounded waits in concurrent tests
+
+---
+
+### 17 — Worker Pool Basics
+
+**Focus:** A fixed group of workers consuming a shared jobs channel.
+
+Builds a small worker pool that processes a known workload, closes channels according to producer ownership, and validates every result without depending on worker assignment or result order.
+
+Key concepts:
+
+* worker pools
+* directional channel types
+* `sync.WaitGroup`
+* jobs and results channel ownership
+* closing results after all producers finish
+* deterministic concurrent-test validation
+
+---
+
+### 18 — Cancellable Worker Pool
+
+**Focus:** Cancelling workers while they wait at a processing boundary.
+
+Introduces a context-aware worker pool whose workers stop without producing results when the caller cancels before processing is released.
+
+Key concepts:
+
+* cancellation-aware workers
+* `context.Context` in a worker pool
+* processing gates with `select`
+* zero-result cancellation validation
+
+---
+
+### 19 — Cancellation of Acquired Work
+
+**Focus:** Proving that cancellation abandons work workers have already acquired.
+
+Refines the Session 18 worker-pool test so each worker reports its acquired job, waits at a cancellation-aware processing boundary, and exits without producing a result after the caller cancels the context.
+
+Key concepts:
+
+* cancellation-aware job acquisition
+* two-value channel receives
+* synchronization signals that represent real worker state
+* cancellation of acquired and queued work
+* lifecycle-based proof of worker termination
+
 ## Cross-Session Reuse
 
 Later sessions intentionally import code from earlier sessions.
@@ -478,17 +564,17 @@ Completed topics include:
 * dependency injection
 * in-memory and JSON-backed storage implementations
 * mocks and custom errors
+* goroutines and synchronization
+* channels, channel lifecycle, and backpressure
+* `select` and bounded waiting
+* context cancellation
+* worker pools and channel ownership
+* race detection for concurrent code
 
 ## Upcoming Topics
 
 The next phase will move further into Go concepts that are especially relevant to backend and infrastructure engineering, including:
 
-* goroutines
-* synchronization
-* channels
-* data races and safe shared state
-* bounded concurrency and worker patterns
-* context cancellation and timeouts
 * graceful shutdown
 * structured logging
 * application configuration
