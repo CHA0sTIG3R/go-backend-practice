@@ -6,6 +6,9 @@ import (
 	"testing"
 )
 
+const WORKERS = 2
+const JOBSCOUNT = 4
+
 type Result struct {
 	Input  int
 	Output int
@@ -51,21 +54,18 @@ func TestWorkerStopsWhenContextCancelled(t *testing.T) {
 
 	var wg sync.WaitGroup
 
-	const workers = 2
-	const jobsCount = 4
-
-	jobs := make(chan int, jobsCount)
-	results := make(chan Result, jobsCount)
-	started := make(chan int, workers)
+	jobs := make(chan int, JOBSCOUNT)
+	results := make(chan Result, JOBSCOUNT)
+	started := make(chan int, WORKERS)
 	release := make(chan struct{})
 
-	for i := range jobsCount {
+	for i := range JOBSCOUNT {
 		jobs <- i
 	}
 
 	close(jobs)
 
-	for range workers {
+	for range WORKERS {
 		wg.Add(1)
 		go worker(
 			ctx,
@@ -77,12 +77,12 @@ func TestWorkerStopsWhenContextCancelled(t *testing.T) {
 		)
 	}
 
-	acquired := make(map[int]bool, workers)
+	acquired := make(map[int]bool, WORKERS)
 
-	for range workers {
+	for range WORKERS {
 		job := <-started
 
-		if job < 0 || job >= jobsCount {
+		if job < 0 || job >= JOBSCOUNT {
 			t.Fatalf("worker acquired invalid job %d", job)
 		}
 		if acquired[job] {
@@ -105,5 +105,90 @@ func TestWorkerStopsWhenContextCancelled(t *testing.T) {
 
 	if ctx.Err() != context.Canceled {
 		t.Fatalf("context error = %v, want %v", ctx.Err(), context.Canceled)
+	}
+}
+
+func TestWorkersCompleteWhenReleased(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var wg sync.WaitGroup
+
+	jobs := make(chan int, JOBSCOUNT)
+	results := make(chan Result, JOBSCOUNT)
+	started := make(chan int, WORKERS)
+	release := make(chan struct{})
+
+	for i := range JOBSCOUNT {
+		jobs <- i
+	}
+	close(jobs)
+
+	for range WORKERS {
+		wg.Add(1)
+		go worker(
+			ctx,
+			jobs,
+			results,
+			started,
+			release,
+			&wg,
+		)
+	}
+
+	acquired := make(map[int]bool, WORKERS)
+
+	for range WORKERS {
+		job := <-started
+
+		if job < 0 || job >= JOBSCOUNT {
+			t.Fatalf("worker acquired invalid job %d", job)
+		}
+		if acquired[job] {
+			t.Fatalf("job %d was acquired more than once", job)
+		}
+
+		acquired[job] = true
+	}
+
+	if len(acquired) != WORKERS {
+		t.Fatalf("number of acquired jobs = %d, want %d", len(acquired), WORKERS)
+	}
+
+	close(release)
+
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	finalResultsMap := make(map[int]int)
+
+	for result := range results {
+		t.Logf("input: %d\n output: %d", result.Input, result.Output)
+
+		if !acquired[result.Input] {
+			t.Fatalf("worker returned result for unacquired job %d", result.Input)
+		}
+		if _, ok := finalResultsMap[result.Input]; ok {
+			t.Fatalf("worker returned result for already completed job %d", result.Input)
+		}
+		if result.Output != result.Input*result.Input {
+			t.Fatalf("worker returned invalid result %v, want %d", result, result.Input*result.Input)
+		}
+		finalResultsMap[result.Input] = result.Output
+	}
+
+	if len(finalResultsMap) != WORKERS {
+		t.Fatalf("number of completed jobs = %d, want %d", len(finalResultsMap), WORKERS)
+	}
+
+	for job := range finalResultsMap {
+		if !acquired[job] {
+			t.Fatalf("job %d was completed but not acquired", job)
+		}
+		if finalResultsMap[job] != job*job {
+			t.Fatalf("job %d was completed with invalid result %d, want %d", job, finalResultsMap[job], job*job)
+		}
 	}
 }
