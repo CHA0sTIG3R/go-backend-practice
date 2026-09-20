@@ -435,6 +435,22 @@ Key concepts:
 * cancellation of acquired and queued work
 * lifecycle-based proof of worker termination
 
+---
+
+### 20 — Channel Close as a Broadcast Signal
+
+**Focus:** Releasing every waiting worker through a single channel close.
+
+Adds the complementary success path to the cancellable worker pool: after two workers acquire jobs and reach the processing gate, closing `release` allows both to compute and return one result without relying on worker order.
+
+Key concepts:
+
+* channel close as a broadcast signal
+* broadcast versus one-to-one channel sends
+* shared processing gates
+* complementary cancellation and success-path tests
+* validating results against acquired work
+
 ## Cross-Session Reuse
 
 Later sessions intentionally import code from earlier sessions.
@@ -566,6 +582,7 @@ Completed topics include:
 * mocks and custom errors
 * goroutines and synchronization
 * channels, channel lifecycle, and backpressure
+* channel closure as a broadcast signal
 * `select` and bounded waiting
 * context cancellation
 * worker pools and channel ownership
