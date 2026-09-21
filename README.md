@@ -46,7 +46,8 @@ go-backend-practice/
     ├── 15-select-timeouts/
     ├── 16-context-cancellation/
     ├── 17-worker-pool/
-    └── 18-cancellable-worker-pool/
+    ├── 18-cancellable-worker-pool/
+    └── 21-http-middleware/
 ```
 
 Each session has its own Go module.
@@ -451,6 +452,23 @@ Key concepts:
 * complementary cancellation and success-path tests
 * validating results against acquired work
 
+---
+
+### 21 — HTTP Middleware and Request Context
+
+**Focus:** Applying cross-cutting HTTP behavior by wrapping handlers.
+
+Implements request-ID middleware that reads `X-Request-ID`, attaches the value to a derived request context, and passes that derived request to a downstream handler.
+
+Key concepts:
+
+* `http.Handler` middleware composition
+* `http.HandlerFunc`
+* request-scoped context values
+* private context key types
+* `r.WithContext(ctx)`
+* `httptest` request and response testing
+
 ## Cross-Session Reuse
 
 Later sessions intentionally import code from earlier sessions.
@@ -575,6 +593,7 @@ Completed topics include:
 * unit testing
 * table-driven tests
 * HTTP handler testing
+* HTTP middleware and request-scoped context
 * interfaces
 * repository abstractions
 * dependency injection
