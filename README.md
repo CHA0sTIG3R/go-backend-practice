@@ -469,6 +469,23 @@ Key concepts:
 * `r.WithContext(ctx)`
 * `httptest` request and response testing
 
+---
+
+### 22 — Middleware Composition and Execution Order
+
+**Focus:** Ordering middleware according to the request state each layer produces or consumes.
+
+Composes request-ID enrichment with context-based request-ID validation. The middleware chain allows valid requests to reach the final handler and stops missing-ID requests with `400 Bad Request`.
+
+Key concepts:
+
+* nested `http.Handler` composition
+* outside-in request execution order
+* middleware dependency ordering
+* terminating a middleware chain
+* context retrieval versus request validation
+* allow and reject path testing
+
 ## Cross-Session Reuse
 
 Later sessions intentionally import code from earlier sessions.
@@ -594,6 +611,7 @@ Completed topics include:
 * table-driven tests
 * HTTP handler testing
 * HTTP middleware and request-scoped context
+* middleware composition and execution order
 * interfaces
 * repository abstractions
 * dependency injection
